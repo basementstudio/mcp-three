@@ -4,27 +4,48 @@ import { GLTFStructureLoader } from 'gltfjsx'
 import fs from 'fs/promises'
 
 export const schema = {
-  model: z.string().describe("The path to the GLTF/GLB model file to get the structure of"),
+  model: z.string().describe("The path to the GLTF/GLB model file to get the structure of. The path should be absolute on the file system. Do not use relative paths."),
 }
 
 export const metadata = {
   name: "get-model-structure",
   description: "Get the structure of a GLTF/GLB model file. This tool loads the file and returns the parsed scene structure as JSON, using GLTFStructureLoader from gltfjsx. Useful for inspecting the hierarchy and contents of a 3D model without loading all binary data or textures.",
+  annotations: {
+    title: "Get the structure of a GLTF/GLB model file",
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+  },
 }
 
 export default async function getModelStructureTool({ model }: InferSchema<typeof schema>) {
-  // Read the model file as a buffer
+  // Check if file exists before reading
+  const exists = await fs.access(model).then(() => true).catch(() => false)
+  if (!exists)
+    return {
+      content: [{
+        type: "text",
+        text: `Model file not found at path: ${model}`,
+      },
+      ],
+      isError: true
+    }
   const data = await fs.readFile(model)
-  // Parse the structure using GLTFStructureLoader
+
+
+
+  // // Parse the structure using GLTFStructureLoader
   const loader = new GLTFStructureLoader()
   const structure = await new Promise<{ scene: any }>(resolve => {
     loader.parse(data, '', resolve)
   })
+
   return {
     content: [
       {
         type: "text",
-        text: JSON.stringify(structure.scene, null, 2),
+        // text: JSON.stringify(structure.scene, null, 2),
+        text: data.length.toString(),
       },
     ],
   }
