@@ -2,7 +2,7 @@ import { InferSchema } from "xmcp"
 import { z } from "zod"
 import { GLTFStructureLoader } from 'gltfjsx'
 import fs from 'fs/promises'
-import { getModelBuffer, loadGltf } from "../utils/get-jsx"
+import { getModelBuffer } from "../utils/get-jsx"
 
 export const schema = {
   modelPath: z.string().describe("The path to the GLTF/GLB model file to get the structure of. The path should be absolute on the file system. Do not use relative paths."),
@@ -10,9 +10,9 @@ export const schema = {
 
 export const metadata = {
   name: "get-model-structure",
-  description: "Get the structure of a GLTF/GLB model file. This tool loads the file and returns the parsed scene structure as JSON, using GLTFStructureLoader from gltfjsx. Useful for inspecting the hierarchy and contents of a 3D model without loading all binary data or textures.",
+  description: "Get the structure of a GLTF/GLB model file. This tool loads the file and returns the parsed scene structure as JSON, using GLTFStructureLoader from gltfjsx. Use this tool for complex model debugging and not implementation. For code generation use the gltfx tool.",
   annotations: {
-    title: "Get the structure of a GLTF/GLB model file",
+    title: "Get the structure of a GLTF/GLB model file. Useful for complex model debugging and not implementation. For code generation use the gltfx tool.",
     readOnlyHint: true,
     destructiveHint: false,
     idempotentHint: true,

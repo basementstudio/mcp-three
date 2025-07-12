@@ -98,7 +98,8 @@ export default async function gltfjsxTool({ modelPath, options }: InferSchema<ty
       const group = useRef<GLTFResult>() REPLACE WITH const group = useRef<GLTFResult|null>(null)
       `
     },
-    { type: "text", text: "Make sure to add the correct path to useGLTF('*')" }
+    { type: "text", text: "Make sure to add the correct path to useGLTF('*')" },
+    { type: "text", text: "Add an import to the type JSX on the file if using typescript" },
   ]
 
   if (model.animations.length === 0) {
