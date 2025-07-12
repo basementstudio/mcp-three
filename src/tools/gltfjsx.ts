@@ -82,7 +82,22 @@ export default async function gltfjsxTool({ modelPath, options }: InferSchema<ty
     { type: "text", text: "Generated JSX:" },
     { type: "text", text: jsx },
     { type: "text", text: "Implementation instructions:" },
-    { type: "text", text: "Add as any on `useGLTF('*') as GLTFResult` => `useGLTF('*') as any as GLTFResult`" },
+    {
+      type: "text", text: `Whenever you find any "as GLTFResult", replace it with "as any as GLTFResult"
+      This will fix type errors on the application.
+      For example:
+      useGLTF('*') as GLTFResult REPLACE WITH useGLTF('*') as any as GLTFResult
+      useGraph(clone) as GLTFResult REPLACE WITH useGraph(clone) as any as GLTFResult
+      ` },
+    {
+      type: "text", text: `
+      For better type safety, when using refs, use the following syntax:
+      const ref = useRef<GLTFResult>(null)
+
+      For example:
+      const group = useRef<GLTFResult>() REPLACE WITH const group = useRef<GLTFResult|null>(null)
+      `
+    },
     { type: "text", text: "Make sure to add the correct path to useGLTF('*')" }
   ]
 
