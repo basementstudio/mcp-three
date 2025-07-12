@@ -48,7 +48,7 @@ declare module "gltfjsx" {
     debug?: boolean
   }
 
-  export function parse(model: any, options?: ParseOptions): string
+  export function parse(model: any, options?: ParseOptions): Promise<string>
 
   /**
    * Loader for extracting the structure of a GLTF/GLB file without loading binaries or textures.

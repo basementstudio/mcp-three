@@ -1,12 +1,12 @@
 import { z } from "zod"
 import { type InferSchema } from "xmcp"
 import fs from 'fs/promises'
-import { getJsxFromFile } from "../utils/get-jsx"
+import { getJsx, loadGltf } from "../utils/get-jsx"
 
 // Define the schema for tool parameters
 export const schema = {
   /** The path to the GLTF/GLB model file */
-  model: z.string().describe("The path to the GLTF/GLB model file to convert to JSX. The path should be absolute. The path should be absolute on the file system. Do not use relative paths."),
+  modelPath: z.string().describe("The path to the GLTF/GLB model file to convert to JSX. The path should be absolute. The path should be absolute on the file system. Do not use relative paths."),
   /** Options for the gltfjsx parser */
   options: z.object({
     types: z.boolean().optional().describe("Add Typescript definitions to the output"),
@@ -49,22 +49,49 @@ export const metadata = {
 }
 
 // Tool implementation
-export default async function gltfjsxTool({ model, options }: InferSchema<typeof schema>) {
+export default async function gltfjsxTool({ modelPath, options }: InferSchema<typeof schema>) {
 
   // Check if file exists before reading
-  const exists = await fs.access(model).then(() => true).catch(() => false)
+  const exists = await fs.access(modelPath).then(() => true).catch(() => false)
   if (!exists)
     return {
       content: [{
         type: "text",
-        text: `Model file not found at path: ${model}`,
+        text: `Model file not found at path: ${modelPath}`,
       },
       ],
       isError: true
     }
 
-  const jsx = await getJsxFromFile(model)
+  const model = await loadGltf(modelPath)
+
+  const jsx = await getJsx(model, options)
+
+  if (typeof jsx !== "string") {
+    return {
+      content: [{
+        type: "text",
+        text: "Failed to generate JSX",
+      }],
+      isError: true
+    }
+  }
+
+
+  const result = [
+    { type: "text", text: "Generated JSX:" },
+    { type: "text", text: jsx },
+    { type: "text", text: "Implementation instructions:" },
+    { type: "text", text: "Add as any on `useGLTF('*') as GLTFResult` => `useGLTF('*') as any as GLTFResult`" },
+    { type: "text", text: "Make sure to add the correct path to useGLTF('*')" }
+  ]
+
+  if (model.animations.length === 0) {
+    result.push({ type: "text", text: "No animations found in the model. Remove the from the type declaration if present." })
+  }
+
+
   return {
-    content: [{ type: "text", text: JSON.stringify(jsx, null, 2) }],
+    content: result,
   }
 }

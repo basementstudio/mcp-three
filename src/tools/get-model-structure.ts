@@ -2,9 +2,10 @@ import { InferSchema } from "xmcp"
 import { z } from "zod"
 import { GLTFStructureLoader } from 'gltfjsx'
 import fs from 'fs/promises'
+import { getModelBuffer, loadGltf } from "../utils/get-jsx"
 
 export const schema = {
-  model: z.string().describe("The path to the GLTF/GLB model file to get the structure of. The path should be absolute on the file system. Do not use relative paths."),
+  modelPath: z.string().describe("The path to the GLTF/GLB model file to get the structure of. The path should be absolute on the file system. Do not use relative paths."),
 }
 
 export const metadata = {
@@ -18,34 +19,32 @@ export const metadata = {
   },
 }
 
-export default async function getModelStructureTool({ model }: InferSchema<typeof schema>) {
+export default async function getModelStructureTool({ modelPath }: InferSchema<typeof schema>) {
   // Check if file exists before reading
-  const exists = await fs.access(model).then(() => true).catch(() => false)
+  const exists = await fs.access(modelPath).then(() => true).catch(() => false)
   if (!exists)
     return {
       content: [{
         type: "text",
-        text: `Model file not found at path: ${model}`,
+        text: `Model file not found at path: ${modelPath}`,
       },
       ],
       isError: true
     }
-  const data = await fs.readFile(model)
 
+  const model = getModelBuffer(modelPath)
 
-
-  // // Parse the structure using GLTFStructureLoader
+  // Parse the structure using GLTFStructureLoader
   const loader = new GLTFStructureLoader()
   const structure = await new Promise<{ scene: any }>(resolve => {
-    loader.parse(data, '', resolve)
+    loader.parse(model, '', resolve)
   })
 
   return {
     content: [
       {
         type: "text",
-        // text: JSON.stringify(structure.scene, null, 2),
-        text: data.length.toString(),
+        text: JSON.stringify(structure.scene, null, 2),
       },
     ],
   }
