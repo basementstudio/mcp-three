@@ -1,5 +1,7 @@
 # MCP Three - 3D Model Processing Server
 
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=mcp-three&config=eyJ0eXBlIjoic3RkaW8iLCJjb21tYW5kIjoibnB4IC15IG1jcC10aHJlZSJ9)
+
 A Model Context Protocol (MCP) server specialized for working with 3D models, specifically GLTF/GLB files. This server provides tools to convert 3D models into React Three Fiber JSX components and analyze model structures.
 
 ## Features
