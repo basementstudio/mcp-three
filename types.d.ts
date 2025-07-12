@@ -49,4 +49,25 @@ declare module "gltfjsx" {
   }
 
   export function parse(model: any, options?: ParseOptions): string
+
+  /**
+   * Loader for extracting the structure of a GLTF/GLB file without loading binaries or textures.
+   * Usage:
+   *   const loader = new GLTFStructureLoader()
+   *   loader.parse(data, '', callback)
+   */
+  export class GLTFStructureLoader {
+    constructor()
+    /**
+     * Parses a GLTF/GLB buffer and calls the callback with the result.
+     * @param data The GLTF/GLB file data as a Buffer or ArrayBuffer
+     * @param path The file path (can be empty string)
+     * @param callback Callback receiving the parsed structure (e.g., { scene })
+     */
+    parse(
+      data: Buffer | ArrayBuffer,
+      path: string,
+      callback: (result: { scene: any }) => void
+    ): void
+  }
 }
