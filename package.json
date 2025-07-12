@@ -11,6 +11,7 @@
     "start": "node dist/stdio.js"
   },
   "dependencies": {
+    "gltfjsx": "^6.5.3",
     "xmcp": "^0.1.3",
     "zod": "3.24.4"
   },

@@ -9,6 +9,7 @@
     "rootDir": "./src"
   },
   "include": [
+    "types.d.ts",
     "xmcp-env.d.ts",
     "src/**/*.ts"
   ]
