@@ -1,7 +1,10 @@
 {
   "name": "mcp-three",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "An XMCP application with tool syntax",
+  "bin": {
+    "mcp-three": "./dist/stdio.js"
+  },
   "engines": {
     "node": ">=20.0.0"
   },
