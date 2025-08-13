@@ -1,3 +1,10 @@
+// Polyfill for 'self' in Node.js environment to support three.js loaders
+// @ts-ignore
+if (typeof self === 'undefined' && typeof global !== 'undefined') {
+  // @ts-ignore
+  global.self = global
+}
+
 import { InferSchema } from "xmcp"
 import { z } from "zod"
 import { GLTFStructureLoader } from 'gltfjsx'

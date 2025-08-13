@@ -17,7 +17,7 @@
   "dependencies": {
     "gltfjsx": "^6.5.3",
     "three-stdlib": "^2.36.0",
-    "xmcp": "^0.1.4",
+    "xmcp": "^0.1.8",
     "zod": "3.24.4"
   },
   "devDependencies": {

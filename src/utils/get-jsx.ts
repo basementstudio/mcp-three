@@ -1,3 +1,10 @@
+// Polyfill for 'self' in Node.js environment to support three.js loaders
+// @ts-ignore
+if (typeof self === 'undefined' && typeof global !== 'undefined') {
+  // @ts-ignore
+  global.self = global
+}
+
 import { GLTFLoader, DRACOLoader, GLTF } from 'three-stdlib'
 import { parse, ParseOptions } from 'gltfjsx'
 import { readFileSync } from 'fs'
@@ -42,7 +49,7 @@ export async function loadGltf(glbFilePath: string): Promise<GLTF> {
 
   const gltfLoader = new GLTFLoader()
   const dracoloader = new DRACOLoader()
-  dracoloader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/')
+  dracoloader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.5/')
   gltfLoader.setDRACOLoader(dracoloader)
 
   // Convert Node.js Buffer to ArrayBuffer (needed for three.js loaders)
